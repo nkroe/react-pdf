@@ -8,21 +8,18 @@ import { version } from '../package.json';
 
 const fontStore = new FontStore();
 
-// We must keep a single renderer instance, otherwise React will complain
-let renderer;
-
-// The pdf instance acts as an event emitter for DOM usage.
-// We only want to trigger an update when PDF content changes
-const events = {};
-
 const pdf = initialValue => {
+  // The pdf instance acts as an event emitter for DOM usage.
+  // We only want to trigger an update when PDF content changes
+  const events = {};
+
   const onChange = () => {
     const listeners = events.change?.slice() || [];
     for (let i = 0; i < listeners.length; i += 1) listeners[i]();
   };
 
   const container = { type: 'ROOT', document: null };
-  renderer = renderer || createRenderer({ onChange });
+  const renderer = createRenderer({ onChange });
   const mountNode = renderer.createContainer(container);
 
   const updateContainer = (doc, callback) => {
